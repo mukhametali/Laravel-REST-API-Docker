@@ -3,25 +3,18 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
-    public function store(Request $request)
+    public function store(StoreUserRequest $request, UserService $userService): UserResource
     {
-        $validated = $request->validate([
-            'name' => ['required', 'min:5','max:255'],
-            'email' => ['required', 'email','max:255'],
-            'password' => ['required', 'min:8','confirmed']
-        ]);
+        $user = $userService->store($request->validated());
 
-        $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => bcrypt($validated['password']),
-        ]);
-
-        return $user;
+        return new UserResource($user);
     }
 }

@@ -16,7 +16,7 @@ class RegisterController extends Controller
     {
         $user = $userService->store($request->validated());
 
-        $user->notify(new WelcomeEmailNotification());
+        //$user->notify(new WelcomeEmailNotification()); Простая отправка через контроллер
 
         return new UserResource($user);
     }
